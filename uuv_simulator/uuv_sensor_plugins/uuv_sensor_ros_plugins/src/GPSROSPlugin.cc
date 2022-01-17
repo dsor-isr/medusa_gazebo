@@ -76,12 +76,18 @@ bool GPSROSPlugin::OnUpdateGPS() {
   this->gpsMessage.longitude = -this->gazeboGPSSensor->Longitude().Degree() + 2*longt_origin;
   this->gpsMessage.altitude = this->gazeboGPSSensor->Altitude();
 
-  // Only publish if we are not completely submerged
-  // in order to simulate losing connection to the GPS (like in real life)
-  //if (this->gpsMessage.altitude > -0.6) {
-    this->rosSensorOutputPub.publish(this->gpsMessage);
-  //}
+  // Send the statuc message of unaugmented fix
+  this->gpsMessage.status.status = 0;
 
+  // Lose connection if completely submerged
+  // in order to simulate losing connection to the GPS (like in real life)
+  if (this->gpsMessage.altitude < -0.6) {  
+    // Modify the status message of unable to fix position, such that the medusa stack ignores this message
+    this->gpsMessage.status.status = -1;
+  }
+
+  //Publish the message
+  this->rosSensorOutputPub.publish(this->gpsMessage);
   return true;
 }
 
