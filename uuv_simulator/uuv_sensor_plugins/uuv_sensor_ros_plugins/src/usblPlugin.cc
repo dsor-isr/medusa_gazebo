@@ -10,7 +10,7 @@ using namespace gazebo;
 std::vector<std::string> im = {"common", "individual"};
 
 // default temperature = 10 degrees Celsius
-usblPlugin::usblPlugin(): m_temperature(10.0), m_soundSpeed(1500) {}
+usblPlugin::usblPlugin(): m_temperature(10.0), m_soundSpeed(1500), m_noiseMu(0), m_noiseSigma(1) {}
 
 usblPlugin::~usblPlugin() {}
 
@@ -178,6 +178,20 @@ void usblPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         this->m_interrogationMode = "common";
     }
 
+    /*------------------------------------------------------------------------*/
+    // get the mean of normal distribution for the noise model
+    if (_sdf->HasElement("mu"))
+    {
+        this->m_noiseMu = _sdf->Get<double>("mu");
+    }
+
+    /*------------------------------------------------------------------------*/
+    // get the standard deviation of normal distribution for the noise model
+    if (_sdf->HasElement("sigma"))
+    {
+        this->m_noiseSigma = _sdf->Get<double>("sigma");
+    }
+
     /************************************************************************/
 
     // store this entity model
@@ -199,7 +213,7 @@ void usblPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     // ROS publisher for common interrogation signal ping
     std::string cis_pinger_topic = "/" + m_namespace
         + "/common_interrogation_ping";
-    this->m_cisPinger = this->m_rosNode->advertise<std_msgs::String>(
+    this->m_cisPinger = this->m_rosNode->advertise<uuv_sensor_ros_plugins_msgs::modemLocation>(
         cis_pinger_topic, 1);
 
     // ROS publisher for individual signal ping and command for each modem
@@ -209,7 +223,7 @@ void usblPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
             + this->m_modemDevice + "_" + modem
             + "/individual_interrogation_ping");
         this->m_iisPinger[modem] = this->m_rosNode->advertise<
-            std_msgs::String>(ping_topic, 1);
+            uuv_sensor_ros_plugins_msgs::modemLocation>(ping_topic, 1);
     }
 
     //std::string modem_location_cartesion_topic = "/"
@@ -223,7 +237,7 @@ void usblPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->m_trigger_serialization = this->m_rosNode->advertise<std_msgs::Empty>("/"+this->m_usblAttachedObject+"/acomms/scheme/trigger_serialization", 1);
     
     this->m_payload_to_deserialize = this->m_rosNode->advertise<std_msgs::String>("/"+this->m_usblAttachedObject+"/acomms/scheme/payload_to_deserialize", 1);
-
+    
     /************************************************************************/
 
     /******************  ROS SUBSCRIBERS ***********************/
@@ -318,16 +332,30 @@ void usblPlugin::payloadToTransmitCallback(const std_msgs::StringConstPtr &paylo
     // gzmsg << "distance to tranponder: " << dist << " m\n";
     sleep(dist/this->m_soundSpeed);
 
-    std_msgs::String aux_msg;
-    aux_msg.data = payload->data;
+    // randomly generate from normal distribution for noise
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::normal_distribution<> d(this->m_noiseMu, this->m_noiseSigma);
+
+    // Gazebo publishing modem's position with noise and delay
+    auto curr_pose = this->m_model->WorldPose();
+    ignition::math::Vector3<double> position = curr_pose.Pos();
+
+    uuv_sensor_ros_plugins_msgs::modemLocation aux_modem_pos;
+
+    aux_modem_pos.x = position.X() + d(gen);
+    aux_modem_pos.y = position.Y() + d(gen);
+    aux_modem_pos.z = position.Z() + d(gen); 
+    aux_modem_pos.modem_ID = this->m_usblID;
+    aux_modem_pos.data = payload->data;
 
     if (this->m_interrogationMode.compare("common") == 0)
     {
-        this->m_cisPinger.publish(aux_msg);
+        this->m_cisPinger.publish(aux_modem_pos);
     }
     else if (this->m_interrogationMode.compare("individual") == 0)
     {
-        this->m_iisPinger[this->m_channel].publish(aux_msg);
+        this->m_iisPinger[this->m_channel].publish(aux_modem_pos);
     }
     else
     {
@@ -412,7 +440,8 @@ void usblPlugin::publishPosition(double &bearing, double &range,
     location_cartesion.z = range * sin(elevation * M_PI/180);
 
 
-    gzmsg << "\n\nSource_id: " << this->aux_modem_id << "\nSpherical Coordinate: \n\tBearing: " << location.x
+    gzmsg << "\n\nIN: " << this->m_usblAttachedObject  << "\nSource_id: " << this->aux_modem_id << 
+      "\nSpherical Coordinate: \n\tBearing: " << location.x
           << " degree(s)\n\tRange: " << location.y
           << " m\n\tElevation: " << location.z << " degree(s)\n" << "\n\n";
     //gzmsg << "Cartesion Coordinate: \n\tX: " << location_cartesion.x

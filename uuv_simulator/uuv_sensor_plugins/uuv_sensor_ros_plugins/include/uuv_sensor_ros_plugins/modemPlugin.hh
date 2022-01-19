@@ -18,6 +18,8 @@
 #include <std_msgs/Float64.h>
 
 #include "uuv_sensor_ros_plugins_msgs/modemLocation.h"
+#include "dmac/mUSBLFix.h"
+#include <geometry_msgs/Vector3.h>
 
 namespace gazebo
 {
@@ -28,10 +30,13 @@ namespace gazebo
       ~modemPlugin();
 
       void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
-      void iisRosCallback(const std_msgs::StringConstPtr &msg);
-      void cisRosCallback(const std_msgs::StringConstPtr &msg);
+      void iisRosCallback(uuv_sensor_ros_plugins_msgs::modemLocationConstPtr modem_position);
+      void cisRosCallback(uuv_sensor_ros_plugins_msgs::modemLocationConstPtr modem_position);
       void payloadToTransmitCallback(const std_msgs::StringConstPtr &payload);
       void queueThread();
+
+      void publishPosition(double &bearing, double &range, double &elevation);
+      void calcuateRelativePose(ignition::math::Vector3d position, double &bearing, double &range, double &elevation);
 
     private:
       std::string m_namespace;
@@ -42,12 +47,16 @@ namespace gazebo
       std::string m_modemAttachedObject;
       std::string m_usblAttachedObject;
       std::string m_delayUntilAnswer;
+      
+      std::string aux_usbl_id;
+      std::string aux_usbl_frame_id;
 
       // environment variables
       double m_temperature;
       double m_soundSpeed;
       double m_noiseMu;
       double m_noiseSigma;
+      bool m_hasUSBL;
 
       // Gazebo nodes, publishers, and subscribers
       physics::ModelPtr m_model;
@@ -62,6 +71,8 @@ namespace gazebo
       ros::Subscriber m_commandSub;
       ros::Subscriber m_payload_to_transmit;
       ros::CallbackQueue m_rosQueue;
+
+      ros::Publisher m_usbl_fix;
 
       std::unique_ptr<ros::NodeHandle> m_rosNode;
       std::thread m_rosQueueThread;

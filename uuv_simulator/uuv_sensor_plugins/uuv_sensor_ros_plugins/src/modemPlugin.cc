@@ -5,7 +5,7 @@ using namespace gazebo;
 
 
 modemPlugin::modemPlugin(): m_temperature(10.0), m_noiseMu(0),
-                                        m_noiseSigma(1), m_soundSpeed(1500) {}
+                                        m_noiseSigma(1), m_soundSpeed(1500), m_hasUSBL(false) {}
 modemPlugin::~modemPlugin() {}
 void modemPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
@@ -123,6 +123,14 @@ void modemPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->m_delayUntilAnswer = _sdf->Get<std::string>(
         "delay_until_answer");
 
+		/*------------------------------------------------------------------------*/
+    // Get if the modem have or not USBL
+    if (_sdf->HasElement("hasUSBL"))
+    {
+				this->m_hasUSBL = _sdf->Get<bool>(
+        "hasUSBL");
+    }
+
     /********************************************************************/
 
     /******************  ROS PUBLISHERS ************************/
@@ -138,6 +146,8 @@ void modemPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->m_payload_to_deserialize = this->m_rosNode->advertise<std_msgs::String>("/"+this->m_modemAttachedObject+"/acomms/scheme/payload_to_deserialize", 1);
     
     this->m_globalPosPub2 = this->m_rosNode->advertise<uuv_sensor_ros_plugins_msgs::modemLocation>("/" + this->m_namespace + "/" + this->m_usblDevice + "_" + this->m_modemID + "/global_position", 1);
+    
+    this->m_usbl_fix = this->m_rosNode->advertise<dmac::mUSBLFix>("/"+this->m_modemAttachedObject+"/acomms/modem/measurement/usbl_fix", 1);
 
     /*********************************************************************/
 
@@ -146,7 +156,7 @@ void modemPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->m_rosNode.reset(new ros::NodeHandle(this->m_modemDevice));
 
     ros::SubscribeOptions iis_ping =
-        ros::SubscribeOptions::create<std_msgs::String>(
+        ros::SubscribeOptions::create<uuv_sensor_ros_plugins_msgs::modemLocation>(
             "/" + this->m_namespace + "/" + this->m_modemDevice
             + "_" + this->m_modemID + "/individual_interrogation_ping",
             1,
@@ -156,7 +166,7 @@ void modemPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->m_iisSub = this->m_rosNode->subscribe(iis_ping);
 
     ros::SubscribeOptions cis_ping =
-        ros::SubscribeOptions::create<std_msgs::String>(
+        ros::SubscribeOptions::create<uuv_sensor_ros_plugins_msgs::modemLocation>(
             "/" + this->m_namespace + "/common_interrogation_ping",
             1,
             boost::bind(&modemPlugin::cisRosCallback, this, _1),
@@ -183,28 +193,60 @@ void modemPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 }
 
 // receives ping from modem and call Send()
-void modemPlugin::iisRosCallback(const std_msgs::StringConstPtr &msg)
+void modemPlugin::iisRosCallback(uuv_sensor_ros_plugins_msgs::modemLocationConstPtr modem_position)
 {
     gzmsg << this->m_modemDevice+ "_" + this->m_modemID
         + ": Received iis_ping, responding\n";
 
-    std_msgs::String aux_msg;
-    aux_msg.data = msg->data + ":vehicle" + this->m_usblID;
+   std_msgs::String aux_msg;
+    aux_msg.data = modem_position->data + ":vehicle" + this->m_usblID; 
     //deserialization
-    this->m_payload_to_deserialize.publish(aux_msg); 
+    this->m_payload_to_deserialize.publish(aux_msg);
+  
+    //when a modem has a usbl too
+    if(this->m_hasUSBL)
+    {
+      ignition::math::Vector3d modem_position_ign
+        = ignition::math::Vector3d(modem_position->x,
+        modem_position->y, modem_position->z);
+
+      this->aux_usbl_id = modem_position->modem_ID;
+      this->aux_usbl_frame_id = this->m_usblAttachedObject + "_usbl";
+
+      double bearing = 0, range = 0, elevation = 0;
+      calcuateRelativePose(modem_position_ign, bearing, range, elevation);
+    
+      publishPosition(bearing, range, elevation);
+    }
 
     //pub triggerSerialization
     std_msgs::Empty aux;
-    this->m_trigger_serialization.publish(aux);
+    this->m_trigger_serialization.publish(aux); 
 }
 
 // receives ping from modem and call Send()
-void modemPlugin::cisRosCallback(const std_msgs::StringConstPtr &msg)
+void modemPlugin::cisRosCallback(uuv_sensor_ros_plugins_msgs::modemLocationConstPtr modem_position)
 {
     std_msgs::String aux_msg;
-    aux_msg.data = msg->data + ":vehicle" + this->m_usblID;
+    aux_msg.data = modem_position->data + ":vehicle" + this->m_usblID; 
     //deserialization
     this->m_payload_to_deserialize.publish(aux_msg);
+  
+    //when a modem has a usbl too
+    if(this->m_hasUSBL)
+    {
+      ignition::math::Vector3d modem_position_ign
+        = ignition::math::Vector3d(modem_position->x,
+        modem_position->y, modem_position->z);
+
+      this->aux_usbl_id = modem_position->modem_ID;
+      this->aux_usbl_frame_id = this->m_modemAttachedObject + "_usbl";
+
+      double bearing = 0, range = 0, elevation = 0;
+      calcuateRelativePose(modem_position_ign, bearing, range, elevation);
+    
+      publishPosition(bearing, range, elevation);
+    }
 
     //pub triggerSerialization
     std_msgs::Empty aux;
@@ -251,3 +293,62 @@ void modemPlugin::queueThread()
         this->m_rosQueue.callAvailable(ros::WallDuration(timeout));
     }
 }
+
+void modemPlugin::calcuateRelativePose(ignition::math::Vector3d position,
+        double &bearing, double &range, double &elevation)
+{
+    auto my_pos = this->m_model->WorldPose();
+    auto direction = -position + my_pos.Pos();
+
+    bearing = (atan2(direction.X(), direction.Y()) + M_PI)* 180 / M_PI;
+    range = sqrt(direction.X()*direction.X() + direction.Y()*direction.Y()
+          + direction.Z()*direction.Z());
+    elevation = asin(-direction.Z()/direction.Length()) * 180 / M_PI;
+}
+
+// publish modem's relative position in spherical
+// coordinate(range, bearing, elevation)
+void modemPlugin::publishPosition(double &bearing, double &range,
+                                        double &elevation)
+{
+    geometry_msgs::Vector3 location;
+    location.x = bearing;
+    location.y = range;
+    location.z = elevation;
+
+    geometry_msgs::Vector3 location_cartesion;
+    location_cartesion.x = range * cos(elevation * M_PI/180)
+                           * cos(bearing * M_PI/180);
+    location_cartesion.y = range * cos(elevation * M_PI/180)
+                           * sin(bearing * M_PI/180);
+    location_cartesion.z = range * sin(elevation * M_PI/180);
+
+
+    gzmsg << "\n\nIN: " << this->m_modemAttachedObject  << "\nSource_id: " << 
+      this->aux_usbl_id << "\nSpherical Coordinate: \n\tBearing: " << location.x
+          << " degree(s)\n\tRange: " << location.y
+          << " m\n\tElevation: " << location.z << " degree(s)\n" << "\n\n";
+    //gzmsg << "Cartesion Coordinate: \n\tX: " << location_cartesion.x
+          //<< " m\n\tY: " << location_cartesion.y
+          //<< " m\n\tZ: " << location_cartesion.z << " m\n\n";
+  
+    //this->m_publishmodemRelPos.publish(location);
+    //this->m_publishmodemRelPosCartesion.publish(location_cartesion);
+
+    dmac::mUSBLFix fix_msg;
+    fix_msg.header.stamp = ros::Time::now();
+    fix_msg.header.frame_id = this->aux_usbl_frame_id;
+    fix_msg.type = fix_msg.FULL_FIX;
+    fix_msg.source_id = std::stoi(this->aux_usbl_id);
+    fix_msg.source_name = this->m_usblDevice + this->aux_usbl_id;
+    fix_msg.bearing_raw = bearing * M_PI/180;
+    fix_msg.elevation_raw = elevation * M_PI/180;
+    fix_msg.range = range;
+    fix_msg.sound_speed = this->m_soundSpeed;
+
+    // to garante that the position sended via acoustic is received frist than angles in USBL2POS
+    ros::Duration(0.1).sleep();
+    this->m_usbl_fix.publish(fix_msg);
+
+}
+

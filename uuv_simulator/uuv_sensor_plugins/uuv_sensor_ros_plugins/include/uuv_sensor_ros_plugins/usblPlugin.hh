@@ -67,6 +67,8 @@ namespace gazebo
       std::vector<std::string> m_deployedmodems_frame_ID;
       std::string aux_modem_id;
       std::string aux_modem_frame_id;
+      double m_noiseMu;
+      double m_noiseSigma;
 
       // Gazebo nodes, publishers, and subscribers
       ros::Timer m_timer;
