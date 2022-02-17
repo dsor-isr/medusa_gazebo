@@ -73,14 +73,8 @@ namespace gazebo {
     /// \brief DVL Measurement message (used by the medusa stack)
     protected: dsor_msgs::Measurement dvlMeasurementMsg;
 
-    /// \brief Altimeter Measurement message (used by the medusa stack)
-    protected: dsor_msgs::Measurement altimeterMeasurementMsg;
-
     /// \brief Additional Measurement ROS topic specific for DVL msgs into medusa stack
     protected: ros::Publisher medusaStackDVLPub;
-
-    /// \brief Additional Measurement ROS topic specific for altimeter msgs into medusa stack
-    protected: ros::Publisher medusaStackAltimeterPub;
 
     /// \brief ROS publisher for twist data.
     protected: ros::Publisher twistPub;
