@@ -84,15 +84,12 @@ void DVLROSPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   // Advertise an DVL + Altimeter topics (for the medusa stack)
   std::string dvlStackTopic = '/' + this->robotNamespace + "/measurement/velocity";
-  std::string altimeterStackTopic = '/' + this->robotNamespace + "/measurement/position";
   this->medusaStackDVLPub = this->rosNode->advertise<dsor_msgs::Measurement>(dvlStackTopic, 1);
-  this->medusaStackAltimeterPub = this->rosNode->advertise<dsor_msgs::Measurement>(altimeterStackTopic, 1);
   
   // Use the link's frame ID
   this->dvlROSMsg.header.frame_id = this->link->GetName();
   this->twistROSMsg.header.frame_id = this->link->GetName();
   this->dvlMeasurementMsg.header.frame_id = this->robotNamespace + "_dvl_bt";
-  this->altimeterMeasurementMsg.header.frame_id = this->robotNamespace + "_altimeter";
 
   // Set covariance for the regular DVL topic (with the beams)
   double variance = this->noiseSigma * this->noiseSigma;
@@ -112,10 +109,6 @@ void DVLROSPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   // Set the covariance for the DVL topic (used by medusa stack)
   for(int i = 0; i < 3; i++) this->dvlMeasurementMsg.noise.push_back(variance);
-
-  // Set the covariance of the altitude topic (used by the medusa stack)
-  // Note: in the future we should check if the beams used already have noise or not
-  this->altimeterMeasurementMsg.noise.push_back(0.0); 
 }
 
 
@@ -187,13 +180,6 @@ bool DVLROSPlugin::OnUpdate(const common::UpdateInfo& _info) {
   this->dvlMeasurementMsg.value.push_back(velocity_vehicle_ned.y());
   this->dvlMeasurementMsg.value.push_back(velocity_vehicle_ned.z());
   this->medusaStackDVLPub.publish(this->dvlMeasurementMsg);
-
-  // Fill the altimeter Measurement message to be used by the Medusa stack
-  this->altimeterMeasurementMsg.header.stamp.sec = currentROSTime.sec;
-  this->altimeterMeasurementMsg.header.stamp.nsec = currentROSTime.nsec;
-  this->altimeterMeasurementMsg.value.clear();
-  this->altimeterMeasurementMsg.value.push_back(this->altitude);
-  this->medusaStackAltimeterPub.publish(this->altimeterMeasurementMsg);
 
   // Read the current simulation time
   this->lastMeasurementTime = this->world->SimTime();

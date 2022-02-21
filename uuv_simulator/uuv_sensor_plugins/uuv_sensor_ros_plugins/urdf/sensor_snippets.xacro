@@ -16,6 +16,8 @@
 -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <xacro:include filename="$(find uuv_sensor_ros_plugins)/urdf/udp_camera_snippets.xacro" />
+  <xacro:include filename="$(find uuv_sensor_ros_plugins)/urdf/altimeter_snippets.xacro" />
   <xacro:include filename="$(find uuv_sensor_ros_plugins)/urdf/imu_snippets.xacro" />
   <xacro:include filename="$(find uuv_sensor_ros_plugins)/urdf/magnetometer_snippets.xacro" />
   <xacro:include filename="$(find uuv_sensor_ros_plugins)/urdf/pressure_snippets.xacro" />

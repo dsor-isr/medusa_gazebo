@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.1)
 project(uuv_sensor_ros_plugins)
 
+# Run the Files in the Cmake folder
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 add_definitions(-std=c++11)
 
 # set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -30,6 +33,14 @@ find_package(OpenCV REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
+# Used for the camera that streams through UDP
+find_package(OpenCV REQUIRED)
+set(GStreamer_FIND_VERSION "1.0")
+find_package(GStreamer REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_search_module(GLIB REQUIRED glib-2.0)
+
 set(UUV_SENSOR_ROS_PLUGINS_LIST "")
 
 # Add Gazebo custom protobuf messages
@@ -56,6 +67,7 @@ file(GLOB msgs msgs/*.proto)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES
+    uuv_gazebo_ros_altimeter_plugin
     uuv_gazebo_ros_base_model_plugin
     uuv_gazebo_ros_base_sensor_plugin
     uuv_gazebo_ros_gps_plugin
@@ -68,6 +80,7 @@ catkin_package(
     uuv_gazebo_ros_rpt_plugin
     uuv_gazebo_ros_camera_plugin
     image_sonar_ros_plugin
+    gazebo_gst_camera_plugin
   CATKIN_DEPENDS
     dsor_utils
     dsor_msgs
@@ -103,16 +116,37 @@ include_directories(
   ${OGRE_Paging_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIR}
+
+  # Used for the camera that streams through UDP like the real ones
+  SYSTEM
+  ${Qt5Core_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${GSTREAMER_INCLUDE_DIRS}
+  ${GSTREAMER_APP_INCLUDE_DIRS}
 )
 
 link_directories(
   ${GAZEBO_LIBRARY_DIRS}
+
+  # Used for the camera that streams through UDP like the real ones
+  ${OpenCV_LIBRARIES}
+  ${GSTREAMER_LIBRARIES}
+  ${GSTREAMER_APP_LIBRARIES}
+  ${GLIB_LDFLAGS}
 )
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${msgs})
 add_library(uuv_sensor_gazebo_msgs SHARED ${PROTO_SRCS})
 target_link_libraries(uuv_sensor_gazebo_msgs ${PROTOBUF_LIBRARY} ${GAZEBO_LIBRARIES})
 list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST uuv_sensor_gazebo_msgs)
+
+###############################################################################
+
+add_library(uuv_gazebo_ros_altimeter_plugin
+  src/AltimeterROSPlugin.cc)
+target_link_libraries(uuv_gazebo_ros_altimeter_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+add_dependencies(uuv_gazebo_ros_altimeter_plugin ${catkin_EXPORTED_TARGETS})
+list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST uuv_gazebo_ros_altimeter_plugin)
 
 ###############################################################################
 
@@ -215,9 +249,23 @@ list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST uuv_gazebo_ros_rpt_plugin)
 ###############################################################################
 
 add_library(uuv_gazebo_ros_camera_plugin src/UnderwaterCameraROSPlugin.cc)
-target_link_libraries(uuv_gazebo_ros_camera_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(uuv_gazebo_ros_camera_plugin ${catkin_LIBRARIES} 
+  ${GAZEBO_LIBRARIES} 
+  ${OpenCV_LIBRARIES} 
+  ${GSTREAMER_LIBRARIES}
+  ${GSTREAMER_APP_LIBRARIES}
+  ${GLIB_LDFLAGS}
+)
 add_dependencies(uuv_gazebo_ros_camera_plugin ${catkin_EXPORTED_TARGETS})
 list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST uuv_gazebo_ros_camera_plugin)
+
+###############################################################################
+
+add_library(gazebo_gst_camera_plugin
+  src/gazebo_gst_camera_plugin.cc)
+target_link_libraries(gazebo_gst_camera_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+add_dependencies(gazebo_gst_camera_plugin ${catkin_EXPORTED_TARGETS})
+list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST gazebo_gst_camera_plugin)
 
 ###############################################################################
 
