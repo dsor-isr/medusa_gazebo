@@ -80,7 +80,6 @@
           <script>
             <uri>file://Media/materials/scripts/waves_below.material</uri>
             <name>Marine3D/SimpleWavesBelow</name>
-            <!-- <name>Marine3D/StaticWater</name> -->
           </script>
         </material>
       </visual>
