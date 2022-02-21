@@ -43,7 +43,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/sand.material</uri>
-            <name>UUVSimulator/SandAndStones</name>
+            <name>Marine3D/SandAndStones</name>
           </script>
         </material>
       </visual>
@@ -62,7 +62,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/waves.material</uri>
-            <name>UUVSimulator/SimpleWaves</name>
+            <name>Marine3D/SimpleWaves</name>
           </script>
         </material>
       </visual>
@@ -79,8 +79,8 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/waves_below.material</uri>
-            <name>UUVSimulator/SimpleWavesBelow</name>
-            <!-- <name>UUVSimulator/StaticWater</name> -->
+            <name>Marine3D/SimpleWavesBelow</name>
+            <!-- <name>Marine3D/StaticWater</name> -->
           </script>
         </material>
       </visual>
@@ -95,7 +95,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -110,7 +110,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -125,7 +125,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -140,7 +140,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -155,7 +155,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
