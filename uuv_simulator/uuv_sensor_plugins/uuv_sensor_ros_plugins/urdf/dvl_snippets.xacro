@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <!-- Copyright (c) 2016 The UUV Simulator Authors.
      All rights reserved.
-
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
-
        http://www.apache.org/licenses/LICENSE-2.0
-
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +23,7 @@
   </xacro:macro>
 
   <xacro:macro name="default_dvl_bluerov_macro" params="namespace parent_link *origin inertial_reference_frame">
-    <xacro:dvl_plugin_macro
+    <xacro:dvl_bluerov_plugin_macro
       namespace="${namespace}"
       suffix=""
       parent_link="${parent_link}"
@@ -35,10 +32,9 @@
       topic="dvl"
       noise_sigma="0"
       noise_amplitude="0"
-      scale="1"
-      dae_file="dvl_nortek_small.dae">
+      scale="1">
       <xacro:insert_block name="origin" />
-    </xacro:dvl_plugin_macro>
+    </xacro:dvl_bluerov_plugin_macro>
   </xacro:macro>
 
   <xacro:macro name="default_dvl_macro" params="namespace parent_link *origin inertial_reference_frame">
@@ -161,6 +157,77 @@
       <visual>
         <geometry>
           <mesh filename="file://$(find uuv_sensor_ros_plugins)/meshes/${dae_file}" scale="${scale} ${scale} ${scale}"/>
+        </geometry>
+      </visual>
+      <xacro:no_collision/>
+    </link>
+
+    <joint name="${namespace}/dvl${suffix}_joint" type="revolute">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent_link}" />
+      <child link="${namespace}/dvl${suffix}_link" />
+      <limit upper="0" lower="0" effort="0" velocity="0" />
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <xacro:dvl_single_sonar
+      namespace="${namespace}" suffix=""
+      index="0" pitch="-0.52" yaw="0.0" update_rate="${update_rate}">
+    </xacro:dvl_single_sonar>
+
+    <xacro:dvl_single_sonar
+      namespace="${namespace}" suffix=""
+      index="1" pitch="0" yaw="0.52" update_rate="${update_rate}">
+    </xacro:dvl_single_sonar>
+
+    <xacro:dvl_single_sonar
+      namespace="${namespace}" suffix=""
+      index="2" pitch="0.52" yaw="0.0" update_rate="${update_rate}">
+    </xacro:dvl_single_sonar>
+
+    <xacro:dvl_single_sonar
+      namespace="${namespace}" suffix=""
+      index="3" pitch="0.0" yaw="-0.52" update_rate="${update_rate}">
+    </xacro:dvl_single_sonar>
+
+    <gazebo>
+      <plugin filename="libuuv_gazebo_ros_dvl_plugin.so" name="libuuv_gazebo_dvl${suffix}_plugin">
+        <robot_namespace>${namespace}</robot_namespace> <!-- (string, required): ros namespace in which the messages are published -->
+        <link_name>${namespace}/dvl${suffix}_link</link_name> <!-- (string, required): name of the body which holds the IMU sensor -->
+        <sensor_topic>${topic}</sensor_topic> <!-- (string): name of the sensor output topic and prefix of service names -->
+        <update_rate>${update_rate}</update_rate> <!-- Update period [s] -->
+        <noise_sigma>${noise_sigma}</noise_sigma> <!-- std dev of position estimates in x, y, z [m/s] -->
+        <noise_amplitude>${noise_amplitude}</noise_amplitude>
+        <enable_gazebo_messages>false</enable_gazebo_messages>
+        <enable_local_ned_frame>false</enable_local_ned_frame>
+        <static_reference_frame>${reference_frame}</static_reference_frame>
+        <!-- Declaring the beams -->
+        <beam_link_name_0>${namespace}/dvl_sonar0_link</beam_link_name_0>
+        <beam_link_name_1>${namespace}/dvl_sonar1_link</beam_link_name_1>
+        <beam_link_name_2>${namespace}/dvl_sonar2_link</beam_link_name_2>
+        <beam_link_name_3>${namespace}/dvl_sonar3_link</beam_link_name_3>
+        <!-- Declaring the beam output topics -->
+        <beam_topic_0>${topic}_sonar0</beam_topic_0>
+        <beam_topic_1>${topic}_sonar1</beam_topic_1>
+        <beam_topic_2>${topic}_sonar2</beam_topic_2>
+        <beam_topic_3>${topic}_sonar3</beam_topic_3>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Macro DVL plugin for the Bluerov vehicle -->
+  <xacro:macro name="dvl_bluerov_plugin_macro"
+    params="namespace suffix parent_link topic scale *origin update_rate
+    reference_frame noise_sigma noise_amplitude">
+    <link name="${namespace}/dvl${suffix}_link">
+      <inertial>
+        <mass value="0.001" />  <!-- [kg] -->
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.000000017" ixy="0" ixz="0" iyy="0.000000017" iyz="0" izz="0.000000017" />
+      </inertial>
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find uuv_sensor_ros_plugins)/meshes/dvl_a50.dae" scale="${scale} ${scale} ${scale}"/>
         </geometry>
       </visual>
       <xacro:no_collision/>
