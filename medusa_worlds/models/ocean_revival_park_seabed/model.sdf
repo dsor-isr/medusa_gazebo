@@ -79,7 +79,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/waves_below.material</uri>
-            <name>UUVSimulator/SimpleWavesBelow</name>
+            <name>Marine3D/SimpleWavesBelow</name>
             <!-- <name>UUVSimulator/StaticWater</name> -->
           </script>
         </material>
@@ -95,7 +95,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -110,7 +110,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -125,7 +125,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -140,7 +140,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
@@ -155,7 +155,7 @@
         <material>
           <script>
             <uri>file://Media/materials/scripts/water.material</uri>
-            <name>UUVSimulator/SeaWall</name>
+            <name>Marine3D/SeaWall</name>
           </script>
         </material>
       </visual>
