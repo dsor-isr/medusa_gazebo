@@ -56,7 +56,7 @@
         <geometry>
           <mesh>
             <uri>file://Media/models/sea_surface_1000m_x_1000m.dae</uri>
-            <scale>2 2 2</scale>
+            <scale>0.4 0.4 0.4</scale>
           </mesh>
         </geometry>
         <material>
