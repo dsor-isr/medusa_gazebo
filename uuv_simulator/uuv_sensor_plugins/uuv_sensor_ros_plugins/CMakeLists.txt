@@ -249,13 +249,7 @@ list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST uuv_gazebo_ros_rpt_plugin)
 ###############################################################################
 
 add_library(uuv_gazebo_ros_camera_plugin src/UnderwaterCameraROSPlugin.cc)
-target_link_libraries(uuv_gazebo_ros_camera_plugin ${catkin_LIBRARIES} 
-  ${GAZEBO_LIBRARIES} 
-  ${OpenCV_LIBRARIES} 
-  ${GSTREAMER_LIBRARIES}
-  ${GSTREAMER_APP_LIBRARIES}
-  ${GLIB_LDFLAGS}
-)
+target_link_libraries(uuv_gazebo_ros_camera_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 add_dependencies(uuv_gazebo_ros_camera_plugin ${catkin_EXPORTED_TARGETS})
 list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST uuv_gazebo_ros_camera_plugin)
 
@@ -263,7 +257,12 @@ list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST uuv_gazebo_ros_camera_plugin)
 
 add_library(gazebo_gst_camera_plugin
   src/gazebo_gst_camera_plugin.cc)
-target_link_libraries(gazebo_gst_camera_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(gazebo_gst_camera_plugin ${catkin_LIBRARIES} 
+  ${GAZEBO_LIBRARIES} 
+  ${OpenCV_LIBRARIES} 
+  ${GSTREAMER_LIBRARIES}
+  ${GSTREAMER_APP_LIBRARIES}
+  ${GLIB_LDFLAGS})
 add_dependencies(gazebo_gst_camera_plugin ${catkin_EXPORTED_TARGETS})
 list(APPEND UUV_SENSOR_ROS_PLUGINS_LIST gazebo_gst_camera_plugin)
 

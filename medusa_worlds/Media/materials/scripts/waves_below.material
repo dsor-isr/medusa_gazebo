@@ -8,7 +8,7 @@ fragment_program SimpleWavesBelowFS glsl
   source ../programs/SimpleWavesBelow.frag
 }
 
-material UUVSimulator/SimpleWavesBelow
+material Marine3D/SimpleWavesBelow
 {
   technique GLSL
   {
