@@ -24,12 +24,22 @@ void SubseaPressureROSPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sd
   
   ROSBaseModelPlugin::Load(_model, _sdf);
 
+  /* Get the sensor parameters from the SDF file */
   GetSDFParam<double>(_sdf, "saturation", this->saturation, 3000);
-  GetSDFParam<bool>(_sdf, "estimate_depth_on", this->estimateDepth, false);
+  GetSDFParam<bool>(_sdf, "estimate_depth_on", this->estimateDepth, true);
   GetSDFParam<double>(_sdf, "standard_pressure", this->standardPressure, 101.325);
   GetSDFParam<double>(_sdf, "kPa_per_meter", this->kPaPerM, 9.80638);
 
+  /* Advertise on the fluid pressure topic */
   this->rosSensorOutputPub = this->rosNode->advertise<sensor_msgs::FluidPressure>(this->sensorOutputTopic, 1);
+
+  /* Advertise on a measurement position topic (medusa stack) */
+  std::string depthStackTopic = '/' + this->robotNamespace + "/measurement/position";
+  this->medusaStackDepthPub = this->rosNode->advertise<dsor_msgs::Measurement>(depthStackTopic, 1);
+
+  /* Initiate the medusa measurement message with the noise covariance */
+  this->depthMeasurementMsg.noise.push_back(this->noiseAmp);
+  this->depthMeasurementMsg.header.frame_id = this->robotNamespace + "_depth";
 }
 
 
@@ -54,7 +64,18 @@ bool SubseaPressureROSPlugin::OnUpdate(const common::UpdateInfo& _info) {
  
   // Estimate depth, if enabled
   double inferredDepth = 0.0;
-  if (this->estimateDepth) inferredDepth = (pressure - this->standardPressure) / this->kPaPerM;
+  if (this->estimateDepth) {
+    inferredDepth = (pressure - this->standardPressure) / this->kPaPerM;
+  
+    // Publish the estimated depth to the medusa stack
+    // Get the current ROS time (can be different from simulation time - ROS uses the computer seconds time since unix was created)
+    ros::Time currentROSTime = ros::Time().now();
+    this->depthMeasurementMsg.header.stamp.sec = currentROSTime.sec;
+    this->depthMeasurementMsg.header.stamp.nsec = currentROSTime.nsec;
+    this->depthMeasurementMsg.value.clear();
+    this->depthMeasurementMsg.value.push_back(inferredDepth);
+    this->medusaStackDepthPub.publish(this->depthMeasurementMsg);
+  }
 
   // Publish ROS pressure message
   sensor_msgs::FluidPressure rosMsg;

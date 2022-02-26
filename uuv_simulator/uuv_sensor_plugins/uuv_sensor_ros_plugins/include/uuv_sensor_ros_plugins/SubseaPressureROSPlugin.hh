@@ -21,11 +21,10 @@
 #include <uuv_sensor_ros_plugins/ROSBaseModelPlugin.hh>
 #include "SensorPressure.pb.h"
 #include <sensor_msgs/FluidPressure.h>
+#include <dsor_msgs/Measurement.h>
 
-namespace gazebo
-{
-  class SubseaPressureROSPlugin : public ROSBaseModelPlugin
-  {
+namespace gazebo {
+  class SubseaPressureROSPlugin : public ROSBaseModelPlugin {
     /// \brief Class constructor
     public: SubseaPressureROSPlugin();
 
@@ -50,6 +49,12 @@ namespace gazebo
 
     /// \brief Factor of kPa per meter
     protected: double kPaPerM;
+
+    /// \brief Depth measurement message (used by the medusa stack)
+    protected: dsor_msgs::Measurement depthMeasurementMsg;
+
+    /// \brief Additional Measurement ROS topic specific for depth msgs into stack
+    protected: ros::Publisher medusaStackDepthPub;
   };
 }
 
