@@ -33,6 +33,11 @@
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:default_imu_macro>
 
+  <!-- Altimeter sensor -->
+  <xacro:medusa_altimeter namespace="${namespace}" parent_link="$(arg namespace)/base_link" suffix="">
+    <origin xyz="-0.3 0 -0.265" rpy="0 ${0.5*pi} 0"/>
+  </xacro:medusa_altimeter>
+
   <!-- Multibeam  -->
   <!--xacro:forward_multibeam_p900 
     namespace="${namespace}" 
