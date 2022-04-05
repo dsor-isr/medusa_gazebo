@@ -3,6 +3,7 @@
 
     <!-- Center of buoyancy -->
     <xacro:property name="bluerov_cob" value="0 0 0.3872"/>
+    <!--xacro:property name="bluerov_cob" value="0 0 0.3872"/-->
 
     <!-- Vehicle's actual volume (Gazebo cannot compute the volume out of the mesh) -->
     <xacro:property name="bluerov_volume" value="${volume}"/>
@@ -26,17 +27,25 @@
           <type>fossen</type>
           <!-- Added mass: see p.28 in Berg2012 -->
           <added_mass>
+            5.5     0      0      0    0     0
+            0       12.7   0      0    0     0
+            0       0      14.57  0    0     0
+            0       0      0      0.12 0     0
+            0       0      0      0    0.12  0
+            0       0      0      0    0     0.12
+          </added_mass>
+          <!--added_mass>
             1.7182  0  0     0 0      0
             0       0  0     0 0      0
             0       0  5.468 0 0      0
             0       0  0     0 0      0
             0       0  0     0 1.2481 0
             0       0  0     0 0      0.4006
-          </added_mass>
+          </added_mass-->
           <!-- Linear damping: see p.31 in Berg2012 -->
-          <linear_damping>-11.7391 -20 -31.8678 -25 -44.9085 -5</linear_damping>
+          <linear_damping>-4.03 -6.22 -5.18 -0.07 -0.07 -3</linear_damping>
           <!-- Non-linear damping: see p.30 in Berg2012 -->
-          <quadratic_damping>0 0 0 0 0 0</quadratic_damping>
+          <quadratic_damping>-18.18 -21.66 -36.99 -1.55 -1.55 -1.55</quadratic_damping>
         </hydrodynamic_model>
       </link>
     </xacro:macro>
