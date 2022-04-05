@@ -13,12 +13,14 @@
       Vehicle's parameters (remember to enter the model parameters below)
     -->
 
-  <xacro:property name="mass" value="11.2"/>
+  <xacro:property name="mass" value="11.5"/>
  
   <!-- Vehicle's bounding box: width, length, height -->
   <xacro:property name="x_size" value="0.448"/>
-  <xacro:property name="y_size" value="0.2384"/>
-  <xacro:property name="z_size" value="0.28066"/>
+  <!--xacro:property name="y_size" value="0.2384"/-->
+  <xacro:property name="y_size" value="0.4571"/>
+  <!--xacro:property name="z_size" value="0.28066"/-->
+  <xacro:property name="z_size" value="0.2539"/>
 
   <!-- Volume -->
   <xacro:property name="volume" value="0.011054"/>
@@ -54,9 +56,13 @@
                 <mass value="${mass}" />
                 <origin xyz="${cog}" rpy="0 0 0"/>
                 <inertia 
+                 ixx="0.21" ixy="0.0"  ixz="0.0"
+                 iyx="0.0"  iyy="0.245" iyz="0.0"
+                 izx="0.0"  izy="0.0"  izz="0.245" />
+                <!--inertia 
                  ixx="${0.2 * mass * y_size * y_size + 0.2 * mass * z_size * z_size}" ixy="0.0" ixz="0.0"
                  iyy="${0.2 * mass * x_size * x_size + 0.2 * mass * z_size * z_size}" iyz="0.0"
-                 izz="${0.2 * mass * x_size * x_size + 0.2 * mass * y_size * y_size}" />
+                 izz="${0.2 * mass * x_size * x_size + 0.2 * mass * y_size * y_size}" /-->
             </inertial>
 
             <visual>
