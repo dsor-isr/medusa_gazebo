@@ -1,5 +1,10 @@
 # README #
 
+[![GitHub issues](https://img.shields.io/github/issues/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/issues)
+[![GitHub forks](https://img.shields.io/github/forks/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/network)
+[![GitHub stars](https://img.shields.io/github/stars/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/stargazers)
+[![GitHub license](https://img.shields.io/github/license/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/blob/main/LICENSE)
+
 ### Objectives
 
 The objectives of this environment are:
