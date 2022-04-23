@@ -1,5 +1,7 @@
 # README #
 
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/dsor-isr/medusa_gazebo/main)
+![GitHub contributors](https://img.shields.io/github/contributors/dsor-isr/medusa_gazebo)
 [![GitHub issues](https://img.shields.io/github/issues/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/network)
 [![GitHub stars](https://img.shields.io/github/stars/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/stargazers)
