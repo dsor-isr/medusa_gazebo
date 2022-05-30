@@ -16,6 +16,9 @@ The objectives of this environment are:
 * Allow the incorporation and simulations done by the people of [DSOR](http://dsor.isr.ist.utl.pt/) but with the mindset of keeping it available to external people as well.
 * Refine the requirements of [DSOR](http://dsor.isr.ist.utl.pt/) regarding the simulation and validation of marine robotic systems.
 
+### Documentation
+https://dsor-isr.github.io/medusa_gazebo
+
 ### Environment Setup
 If running the medusa_gazebo without the medusa_base stack, then the dsor_utils repository is required. You can clone it manually at:
 ```
