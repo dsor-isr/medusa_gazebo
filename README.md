@@ -1,5 +1,6 @@
 # README #
 
+[![Build Status](https://ci.dsor.isr.tecnico.ulisboa.pt/buildStatus/icon?job=GitHub+DSOR%2Fmedusa_gazebo%2Fmain)](https://ci.dsor.isr.tecnico.ulisboa.pt/job/GitHub%20DSOR/job/medusa_gazebo/job/main/)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/dsor-isr/medusa_gazebo/main)
 ![GitHub contributors](https://img.shields.io/github/contributors/dsor-isr/medusa_gazebo)
 [![GitHub issues](https://img.shields.io/github/issues/dsor-isr/medusa_gazebo)](https://github.com/dsor-isr/medusa_gazebo/issues)
