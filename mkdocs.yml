@@ -1,5 +1,5 @@
 # Site metadata
-site_name: Medusa SimulationDocumentation
+site_name: Medusa Simulation Documentation
 site_url: https://dsor-isr.github.io/medusa_gazebo/
 repo_url: https://github.com/dsor-isr/medusa_gazebo
 repo_name: medusa_gazebo
@@ -120,145 +120,75 @@ nav:
 # You can change it, to see how it looks localy, but it well get ovewritten by Jenkins when deploying
 # ---------------------------------------------------------------------------------------------------
 - Packages documentation:
-  - Medusa Base:
-    - Medusa Comms:
-      - Comms Msgs:
-        - Documentation: '!include ./medusa_base/medusa_comms/comms_msgs/mkdocs.yml'
-      - Comms Radio:
-        - Cpf Gamma:
-          - Documentation: '!include ./medusa_base/medusa_comms/comms_radio/cpf_gamma/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_comms/comms_radio/cpf_gamma/Classes
-          - Namespaces:
-            - api/markdown/medusa_base/medusa_comms/comms_radio/cpf_gamma/Namespaces
-      - Comms Acoustic:
-        - Data Serializer:
-          - Documentation: '!include ./medusa_base/medusa_comms/comms_acoustic/data_serializer/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_comms/comms_acoustic/data_serializer/Classes
-          - Namespaces:
-            - api/markdown/medusa_base/medusa_comms/comms_acoustic/data_serializer/Namespaces
-        - Comms State Broadcaster:
-          - Documentation: '!include ./medusa_base/medusa_comms/comms_acoustic/comms_state_broadcaster/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_comms/comms_acoustic/comms_state_broadcaster/Classes
-        - Evo Tools:
-          - Documentation: '!include ./medusa_base/medusa_comms/comms_acoustic/evo_tools/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_comms/comms_acoustic/evo_tools/Classes
-          - Namespaces:
-            - api/markdown/medusa_base/medusa_comms/comms_acoustic/evo_tools/Namespaces
-        - Interrogation Scheme:
-          - Documentation: '!include ./medusa_base/medusa_comms/comms_acoustic/interrogation_scheme/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_comms/comms_acoustic/interrogation_scheme/Classes
-    - Medusa Sim:
-      - Auv Sim:
-        - Documentation: '!include ./medusa_base/medusa_sim/auv_sim/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_sim/auv_sim/Classes
-      - Sensor Sim:
-        - Documentation: '!include ./medusa_base/medusa_sim/sensor_sim/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_sim/sensor_sim/Classes
-    - Medusa Addons:
-      - Http Server:
-        - Documentation: '!include ./medusa_base/medusa_addons/http_server/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_addons/http_server/Classes
-        - Namespaces:
-          - api/markdown/medusa_base/medusa_addons/http_server/Namespaces
-      - Libraries:
-        - Medusa Diagnostics Library:
-          - Documentation: '!include ./medusa_base/medusa_addons/libraries/medusa_diagnostics_library/mkdocs.yml'
-          - Namespaces:
-            - api/markdown/medusa_base/medusa_addons/libraries/medusa_diagnostics_library/Namespaces
-        - Medusa Gimmicks Library:
-          - Documentation: '!include ./medusa_base/medusa_addons/libraries/medusa_gimmicks_library/mkdocs.yml'
-          - Namespaces:
-            - api/markdown/medusa_base/medusa_addons/libraries/medusa_gimmicks_library/Namespaces
-      - Medusa Scripts: '!include ./medusa_base/medusa_addons/medusa_scripts/mkdocs.yml'
-      - Remote Controller:
-        - Documentation: '!include ./medusa_base/medusa_addons/remote_controller/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_addons/remote_controller/Classes
-        - Namespaces:
-          - api/markdown/medusa_base/medusa_addons/remote_controller/Namespaces
-      - Safety Feature:
-        - Documentation: '!include ./medusa_base/medusa_addons/safety_feature/mkdocs.yml'
-      - Status Aggregator:
-        - Documentation: '!include ./medusa_base/medusa_addons/status_aggregator/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_addons/status_aggregator/Classes
-        - Namespaces:
-          - api/markdown/medusa_base/medusa_addons/status_aggregator/Namespaces
-      - Console Path Parser:
-        - Documentation: '!include ./medusa_base/medusa_addons/console_path_parser/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_addons/console_path_parser/Classes
-    - Medusa Msgs:
-      - Documentation: '!include ./medusa_base/medusa_msgs/mkdocs.yml'
-    - Medusa Bringup:
-      - Documentation: '!include ./medusa_base/medusa_bringup/mkdocs.yml'
+  - Medusa Vehicles:
+    - Bluerov Regular:
+      - Documentation: '!include ./medusa_vehicles/bluerov_regular/mkdocs.yml'
+    - Mblack Vehicle:
+      - Documentation: '!include ./medusa_vehicles/mblack_vehicle/mkdocs.yml'
+    - Mred Vehicle:
+      - Documentation: '!include ./medusa_vehicles/mred_vehicle/mkdocs.yml'
+    - Mvector Vehicle:
+      - Documentation: '!include ./medusa_vehicles/mvector_vehicle/mkdocs.yml'
+    - Myellow Vehicle:
+      - Documentation: '!include ./medusa_vehicles/myellow_vehicle/mkdocs.yml'
+  - Medusa Gazebo Bringup:
+    - Documentation: '!include ./medusa_gazebo_bringup/mkdocs.yml'
+  - Medusa Worlds:
+    - Documentation: '!include ./medusa_worlds/mkdocs.yml'
+    - Namespaces:
+      - api/markdown/medusa_worlds/Namespaces
+  - Uuv Simulator:
+    - Uuv Assistants:
+      - Documentation: '!include ./uuv_simulator/uuv_assistants/mkdocs.yml'
       - Classes:
-        - api/markdown/medusa_base/medusa_bringup/Classes
+        - api/markdown/uuv_simulator/uuv_assistants/Classes
       - Namespaces:
-        - api/markdown/medusa_base/medusa_bringup/Namespaces
-    - Medusa Planning:
-      - Dsor Paths:
-        - Documentation: '!include ./medusa_base/medusa_planning/dsor_paths/mkdocs.yml'
+        - api/markdown/uuv_simulator/uuv_assistants/Namespaces
+    - Uuv Descriptions:
+      - Documentation: '!include ./uuv_simulator/uuv_descriptions/mkdocs.yml'
+      - Classes:
+        - api/markdown/uuv_simulator/uuv_descriptions/Classes
+      - Namespaces:
+        - api/markdown/uuv_simulator/uuv_descriptions/Namespaces
+    - Uuv Gazebo Plugins:
+      - Uuv Gazebo Plugins:
+        - Documentation: '!include ./uuv_simulator/uuv_gazebo_plugins/uuv_gazebo_plugins/mkdocs.yml'
         - Classes:
-          - api/markdown/medusa_base/medusa_planning/dsor_paths/Classes
-    - Medusa Control:
-      - Outer Loops Controllers:
-        - Cpf Control:
-          - Documentation: '!include ./medusa_base/medusa_control/outer_loops_controllers/cpf_control/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_control/outer_loops_controllers/cpf_control/Classes
-        - Waypoint:
-          - Documentation: '!include ./medusa_base/medusa_control/outer_loops_controllers/waypoint/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_control/outer_loops_controllers/waypoint/Classes
-        - Path Following:
-          - Documentation: '!include ./medusa_base/medusa_control/outer_loops_controllers/path_following/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_control/outer_loops_controllers/path_following/Classes
-      - Inner Loops Controllers:
-        - Inner Loops Pid:
-          - Documentation: '!include ./medusa_base/medusa_control/inner_loops_controllers/inner_loops_pid/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_control/inner_loops_controllers/inner_loops_pid/Classes
-        - Open Loop Controller:
-          - Documentation: '!include ./medusa_base/medusa_control/inner_loops_controllers/open_loop_controller/mkdocs.yml'
-          - Classes:
-            - api/markdown/medusa_base/medusa_control/inner_loops_controllers/open_loop_controller/Classes
-          - Namespaces:
-            - api/markdown/medusa_base/medusa_control/inner_loops_controllers/open_loop_controller/Namespaces
-      - Static Thruster Allocation:
-        - Documentation: '!include ./medusa_base/medusa_control/static_thruster_allocation/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_control/static_thruster_allocation/Classes
-      - Vehicle Stabilizer:
-        - Documentation: '!include ./medusa_base/medusa_control/vehicle_stabilizer/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_control/vehicle_stabilizer/Classes
-    - Medusa Nav:
-      - Medusa Nav:
-        - Documentation: '!include ./medusa_base/medusa_nav/medusa_nav/mkdocs.yml'
-      - Nav Tools:
-        - Documentation: '!include ./medusa_base/medusa_nav/nav_tools/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_nav/nav_tools/Classes
-      - Sensor Fusion:
-        - Documentation: '!include ./medusa_base/medusa_nav/sensor_fusion/mkdocs.yml'
-        - Classes:
-          - api/markdown/medusa_base/medusa_nav/sensor_fusion/Classes
+          - api/markdown/uuv_simulator/uuv_gazebo_plugins/uuv_gazebo_plugins/Classes
         - Namespaces:
-          - api/markdown/medusa_base/medusa_nav/sensor_fusion/Namespaces
-  - Medusa Sim Bringup:
-    - Documentation: '!include ./medusa_sim_bringup/mkdocs.yml'
-  - Simple Bringup:
-    - Documentation: '!include ./simple_bringup/mkdocs.yml'
+          - api/markdown/uuv_simulator/uuv_gazebo_plugins/uuv_gazebo_plugins/Namespaces
+      - Uuv Gazebo Ros Plugins Msgs:
+        - Documentation: '!include ./uuv_simulator/uuv_gazebo_plugins/uuv_gazebo_ros_plugins_msgs/mkdocs.yml'
+      - Uuv Gazebo Ros Plugins:
+        - Documentation: '!include ./uuv_simulator/uuv_gazebo_plugins/uuv_gazebo_ros_plugins/mkdocs.yml'
+        - Classes:
+          - api/markdown/uuv_simulator/uuv_gazebo_plugins/uuv_gazebo_ros_plugins/Classes
+        - Namespaces:
+          - api/markdown/uuv_simulator/uuv_gazebo_plugins/uuv_gazebo_ros_plugins/Namespaces
+    - Uuv Sensor Plugins:
+      - Uuv Sensor Ros Plugins Msgs:
+        - Documentation: '!include ./uuv_simulator/uuv_sensor_plugins/uuv_sensor_ros_plugins_msgs/mkdocs.yml'
+      - Uuv Sensor Ros Plugins:
+        - Documentation: '!include ./uuv_simulator/uuv_sensor_plugins/uuv_sensor_ros_plugins/mkdocs.yml'
+        - Classes:
+          - api/markdown/uuv_simulator/uuv_sensor_plugins/uuv_sensor_ros_plugins/Classes
+        - Namespaces:
+          - api/markdown/uuv_simulator/uuv_sensor_plugins/uuv_sensor_ros_plugins/Namespaces
+    - Uuv World Plugins:
+      - Uuv World Plugins:
+        - Documentation: '!include ./uuv_simulator/uuv_world_plugins/uuv_world_plugins/mkdocs.yml'
+        - Classes:
+          - api/markdown/uuv_simulator/uuv_world_plugins/uuv_world_plugins/Classes
+        - Namespaces:
+          - api/markdown/uuv_simulator/uuv_world_plugins/uuv_world_plugins/Namespaces
+      - Uuv World Ros Plugins Msgs:
+        - Documentation: '!include ./uuv_simulator/uuv_world_plugins/uuv_world_ros_plugins_msgs/mkdocs.yml'
+      - Uuv World Ros Plugins:
+        - Documentation: '!include ./uuv_simulator/uuv_world_plugins/uuv_world_ros_plugins/mkdocs.yml'
+        - Classes:
+          - api/markdown/uuv_simulator/uuv_world_plugins/uuv_world_ros_plugins/Classes
+        - Namespaces:
+          - api/markdown/uuv_simulator/uuv_world_plugins/uuv_world_ros_plugins/Namespaces
 - Contributing:
   - Code of Conduct: pages/CODE_OF_CONDUCT.md
   - Contributing: pages/CONTRIBUTING.md

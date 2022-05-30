@@ -64,6 +64,8 @@ if result.stderr != '':
 packages_with_docs = result.stdout.split('\n')
 packages_with_docs.pop(-1)
 
+print(result.stdout)
+
 # Pre-process the path so that our data stays inside each package correctly
 packages = []
 for package_path in packages_with_docs:

@@ -16,10 +16,10 @@ ignore_packages_file='docs/ignore_packages.txt'
 ignore_packages=()
 
 # Read the packages to ignore to a list
-while read line; do
+while IFS= read -r line || [[ -n "$line" ]]; do
     # reading each line
     ignore_packages+=($line)
-done < $ignore_packages_file
+done < "$ignore_packages_file"
 
 # Save the current directory
 curr_dir=$(pwd)
