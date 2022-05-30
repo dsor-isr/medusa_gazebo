@@ -23,18 +23,24 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Build..'
-                dir('catkin_ws') {
+                // Download requirements for building the code isolated
+                dir('catkin_ws/src') {
                     withCredentials([GitUsernamePassword(
                     credentialsId: 'github_app_tokn',
                     gitToolName: 'Default')]) 
                     {
                         sh '''#!/bin/bash
-                        # Clone the DSOR utils dependency that must be added manually when cloning this repository isolated
                         git clone --recursive https://github.com/dsor-isr/dsor_utils.git
                         git clone --recursive https://github.com/EvoLogics/dmac.git
-                        source /opt/ros/noetic/setup.bash
-                        catkin build --no-status -j10'''
+                        '''
                     }
+                }
+                // Compile the actual code
+                dir('catkin_ws') {
+                    sh '''#!/bin/bash
+                        source /opt/ros/noetic/setup.bash
+                        catkin build --no-status -j10
+                        '''
                 }
             }
         }
