@@ -31,6 +31,7 @@ pipeline {
                         sh '''#!/bin/bash
                         # Clone the DSOR utils dependency that must be added manually when cloning this repository isolated
                         git clone --recursive https://github.com/dsor-isr/dsor_utils.git
+                        git clone --recursive https://github.com/EvoLogics/dmac.git
                         source /opt/ros/noetic/setup.bash
                         catkin build --no-status -j10'''
                     }
